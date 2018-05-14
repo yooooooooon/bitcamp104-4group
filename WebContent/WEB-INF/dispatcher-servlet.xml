@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" 
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+   	   xmlns:task="http://www.springframework.org/schema/task"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+       xsi:schemaLocation="http://www.springframework.org/schema/beans 
+                           http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://www.springframework.org/schema/context 
+                           http://www.springframework.org/schema/context/spring-context.xsd
+                           http://www.springframework.org/schema/mvc
+						   http://www.springframework.org/schema/mvc/spring-mvc.xsd
+                           http://www.springframework.org/schema/task
+						   http://www.springframework.org/schema/task/spring-task.xsd">
+
+<!-- 
+     미리 필요한 class 생성되어 있고
+	App 필요한 객체의 생성 과 주입
+	
+ **component-scan 통해서 [자동 bean] **
+	
+ @Controller   Presentation Layer에서 Contoller를 명시하기 위해서 사용
+ @Service      Business Layer에서 Service를 명시하기 위해서 사용
+ @Repository   Persistence Layer에서 DAO를 명시하기 위해서 사용
+ @Component      그 외에 자동으로 스캔해서 등록하고 싶은 것들을 위해 사용
+ -->
+ <mvc:annotation-driven />
+<context:annotation-config />
+<context:component-scan base-package="ncontroller" />
+<context:component-scan base-package="service" />
+
+<task:annotation-driven executor="executor" scheduler="scheduler"/>
+<task:scheduler id="scheduler"/>
+<task:executor id="executor" />
+
+
+<bean class="kr.or.spring.AsyncProcess"/>
+<bean class="kr.or.spring.LogProcessor"/>
+
+<!--  회원관련 (DAO) 빈 객체 생성  @Repository 상단 scan 대상 bean 만드는 코드 생략 가능 -->
+<!-- <bean id="memberDao" class="dao.NewMemberDao"></bean> -->
+
+<!-- Tiles 설정하기   -->
+	<bean id="tilesConfigurer" class="org.springframework.web.servlet.view.tiles2.TilesConfigurer">
+	 <property name="definitions">
+	  <list>
+	   <value>/WEB-INF/Tiles.xml</value>
+	  </list>
+	 </property>
+	</bean>
+<!-- Tiles 관련 Resolver 구성  -->
+	<bean id="urlBasedViewResolver" class="org.springframework.web.servlet.view.UrlBasedViewResolver">
+	 	<property name="viewClass" value="org.springframework.web.servlet.view.tiles2.TilesView" />
+	</bean>
+	
+<bean name="jsonview" class="org.springframework.web.servlet.view.json.MappingJackson2JsonView" />
+	 
+</beans>
+
+
+
+
